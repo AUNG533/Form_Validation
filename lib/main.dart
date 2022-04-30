@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:validators/validators.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,6 +54,7 @@ class CustomForm extends StatefulWidget {
 
 class _CustomFormState extends State<CustomForm> {
   final _formKey = GlobalKey<FormState>();
+  User user = User();
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,8 @@ class _CustomFormState extends State<CustomForm> {
               validator: validatorPassword,
               onSaved: null,
             ),
-            _buildSubmitButton()
+            _buildGenderForm(),
+            _buildSubmitButton(),
           ],
         ),
       ),
@@ -91,6 +94,9 @@ class _CustomFormState extends State<CustomForm> {
   String? validatorEmail(value) {
     if (value == null || value.isEmpty) {
       return 'The Email is Empty';
+    }
+    if (!isEmail(value)) {
+      return "The Email must be a valid email.";
     }
     return null;
   }
@@ -105,6 +111,21 @@ class _CustomFormState extends State<CustomForm> {
   InputDecoration _buildInputDecoration(
       {required String label, String? hint, required IconData icon}) {
     return InputDecoration(labelText: label, hintText: hint, icon: Icon(icon));
+  }
+
+  Widget _buildGenderForm() {
+    return Container(
+      margin: EdgeInsets.only(top: 12),
+      child: Row(
+        children: [
+          Text("Gender", style: TextStyle(fontSize: 16),),
+          Radio(value: "male", groupValue: user.gender, onChanged: null),
+          Text("Male"),
+          Radio(value: "male", groupValue: user.gender, onChanged: null),
+          Text("Female"),
+        ],
+      ),
+    );
   }
 
   Widget _buildSubmitButton() {
