@@ -69,7 +69,7 @@ class _CustomFormState extends State<CustomForm> {
                 icon: Icons.email,
               ),
               keyboardType: TextInputType.emailAddress,
-              validator: null,
+              validator: validatorEmail,
               onSaved: null,
             ),
             TextFormField(
@@ -78,16 +78,53 @@ class _CustomFormState extends State<CustomForm> {
                 icon: Icons.email,
               ),
               obscureText: true,
-              validator: null,
+              validator: validatorPassword,
               onSaved: null,
             ),
+            _buildSubmitButton()
           ],
         ),
       ),
     );
   }
 
-  InputDecoration _buildInputDecoration({required String label, String? hint, required IconData icon}){
+  String? validatorEmail(value) {
+    if (value == null || value.isEmpty) {
+      return 'The Email is Empty';
+    }
+    return null;
+  }
+
+  String? validatorPassword(value) {
+    if (value!.length < 8) {
+      return "Teh Password must be at lest 8 characters";
+    }
+    return null;
+  }
+
+  InputDecoration _buildInputDecoration(
+      {required String label, String? hint, required IconData icon}) {
     return InputDecoration(labelText: label, hintText: hint, icon: Icon(icon));
+  }
+
+  Widget _buildSubmitButton() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(top: 32),
+      child: RaisedButton(
+        onPressed: _submit,
+        color: Colors.blue,
+        child: Text(
+          "Submit",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {}
   }
 }
