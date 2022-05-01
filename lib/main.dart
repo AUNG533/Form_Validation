@@ -73,16 +73,20 @@ class _CustomFormState extends State<CustomForm> {
               ),
               keyboardType: TextInputType.emailAddress,
               validator: validatorEmail,
-              onSaved: null,
+              onSaved: (String? value) {
+                user.email = value!;
+              },
             ),
             TextFormField(
               decoration: _buildInputDecoration(
                 label: 'Password',
-                icon: Icons.email,
+                icon: Icons.lock,
               ),
               obscureText: true,
               validator: validatorPassword,
-              onSaved: null,
+              onSaved: (String? value) {
+                user.password = value!;
+              },
             ),
             _buildGenderForm(),
             _buildReceiveEmailForm(),
@@ -222,12 +226,63 @@ class _CustomFormState extends State<CustomForm> {
   }
 
   void _submit() {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      if (user.agreePolicy == false) {
+        showAlertDialog();
+      } else {
+        _formKey.currentState!.save();
+
+        print("Email: ${user.email}");
+        print("Password: ${user.password}");
+        print("Gender: ${user.gender}");
+        print("ReceiveEmail: ${user.receiveEmail}");
+        print("AgreePolicy: ${user.agreePolicy}");
+      }
+    }
+  }
+
+  void showAlertDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Title"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text("Detail1"),
+                Text("Detail2"),
+                Text("Detail3"),
+                Icon(Icons.directions_walk)
+              ],
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: null,
+              icon: Icon(
+                Icons.cake,
+                color: Colors.blue,
+              ),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _launchUrl() async {
     final Uri _url = Uri.parse('https://flutter.dev');
     if (!await launchUrl(_url)) throw 'Could not launch $_url';
   }
-
 }
