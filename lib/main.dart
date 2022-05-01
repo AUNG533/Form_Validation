@@ -84,6 +84,7 @@ class _CustomFormState extends State<CustomForm> {
               onSaved: null,
             ),
             _buildGenderForm(),
+            _buildReceiveEmailForm(),
             _buildSubmitButton(),
           ],
         ),
@@ -114,17 +115,51 @@ class _CustomFormState extends State<CustomForm> {
   }
 
   Widget _buildGenderForm() {
+    const Color activeColor = Colors.orange;
+
     return Container(
       margin: EdgeInsets.only(top: 12),
       child: Row(
         children: [
-          Text("Gender", style: TextStyle(fontSize: 16),),
-          Radio(value: "male", groupValue: user.gender, onChanged: null),
+          Text(
+            "Gender",
+            style: TextStyle(fontSize: 16),
+          ),
+          Radio(
+            activeColor: activeColor,
+            value: "male",
+            groupValue: user.gender,
+            onChanged: _handleRadioValueChange,
+          ),
           Text("Male"),
-          Radio(value: "male", groupValue: user.gender, onChanged: null),
+          Radio(
+            activeColor: activeColor,
+            value: "female",
+            groupValue: user.gender,
+            onChanged: _handleRadioValueChange,
+          ),
           Text("Female"),
         ],
       ),
+    );
+  }
+
+  Widget _buildReceiveEmailForm() {
+    return Row(
+      children: [
+        Text(
+          "Receive Email",
+          style: TextStyle(fontSize: 16),
+        ),
+        Switch(
+            activeColor: Colors.orange,
+            value: user.receiveEmail,
+            onChanged: (select) {
+              setState(() {
+                user.receiveEmail = select;
+              });
+            })
+      ],
     );
   }
 
@@ -143,6 +178,13 @@ class _CustomFormState extends State<CustomForm> {
         ),
       ),
     );
+  }
+
+  void _handleRadioValueChange(value) {
+    print('value: ${value}');
+    setState(() {
+      user.gender = value;
+    });
   }
 
   void _submit() {
