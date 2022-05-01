@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:validators/validators.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -85,6 +86,7 @@ class _CustomFormState extends State<CustomForm> {
             ),
             _buildGenderForm(),
             _buildReceiveEmailForm(),
+            _buildAgreePolicyForm(),
             _buildSubmitButton(),
           ],
         ),
@@ -166,7 +168,7 @@ class _CustomFormState extends State<CustomForm> {
   Widget _buildSubmitButton() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(top: 32),
+      margin: EdgeInsets.only(top: 4),
       child: RaisedButton(
         onPressed: _submit,
         color: Colors.blue,
@@ -176,6 +178,38 @@ class _CustomFormState extends State<CustomForm> {
             color: Colors.white,
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAgreePolicyForm() {
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(top: 32),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Checkbox(
+            value: user.agreePolicy,
+            activeColor: Colors.orange,
+            onChanged: (value) {
+              setState(() {
+                user.agreePolicy = value!;
+              });
+            },
+          ),
+          Text("I Agree the "),
+          GestureDetector(
+            onTap: _launchUrl,
+            child: Text(
+              "Privacy Policy",
+              style: TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -190,4 +224,10 @@ class _CustomFormState extends State<CustomForm> {
   void _submit() {
     if (_formKey.currentState!.validate()) {}
   }
+
+  void _launchUrl() async {
+    final Uri _url = Uri.parse('https://flutter.dev');
+    if (!await launchUrl(_url)) throw 'Could not launch $_url';
+  }
+
 }
